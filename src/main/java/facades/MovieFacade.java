@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -46,6 +47,37 @@ public class MovieFacade {
             em.close();
         }
         
+    }
+    
+    public List<Movie> getAllMovies(){
+        EntityManager em = emf.createEntityManager();
+        return em.createNamedQuery("Movie.getAll").getResultList();
+    }
+    
+    public List<Movie> getMoviesByName(String name){
+        EntityManager em = emf.createEntityManager();
+        TypedQuery<Movie> tq = em.createNamedQuery("Movie.getByName", Movie.class);
+        tq.setParameter("name", "%" + name + "%");
+        return tq.getResultList();
+    }
+    
+    public Movie getMovieById(long id) {
+        EntityManager em = emf.createEntityManager();
+        return em.find(Movie.class, id);
+    }
+
+    public Movie createMovie(Movie movie) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.persist(movie);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+        return movie;
     }
 
 }
