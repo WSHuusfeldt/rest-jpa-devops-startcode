@@ -79,5 +79,20 @@ public class MovieFacade {
         }
         return movie;
     }
+    
+    public void populateMovies() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.createNamedQuery("Movie.deleteAllRows").executeUpdate();
+            em.persist(new Movie(1992, "Harry Potter", new String[]{"Daniel", "Ham den rødhårede", "Emma"}));
+            em.persist(new Movie(1976, "Larsen", new String[]{"Lars", "Sente", "Co2"}));
+            em.persist(new Movie(1954, "Jesus Kristus", new String[]{"Karsten", "Pest", "Rick"}));
+            em.persist(new Movie(1666, "Nå nå", new String[]{"Jesus", "Adam", "Eva"}));
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+    }
 
 }
