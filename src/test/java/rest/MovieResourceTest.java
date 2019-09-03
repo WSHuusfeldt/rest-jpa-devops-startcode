@@ -1,6 +1,6 @@
 package rest;
 
-import entities.RenameMe;
+import entities.Movie;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
@@ -24,7 +24,7 @@ import utils.EMF_Creator.Strategy;
 
 //Uncomment the line below, to temporarily disable this test
 //@Disabled
-public class RenameMeResourceTest {
+public class MovieResourceTest {
 
     private static final int SERVER_PORT = 7777;
     private static final String SERVER_URL = "http://localhost/api";
@@ -43,11 +43,6 @@ public class RenameMeResourceTest {
     @BeforeAll
     public static void setUpClass() {
         emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.CREATE);
-
-        //NOT Required if you use the version of EMF_Creator.createEntityManagerFactory used above        
-        //System.setProperty("IS_TEST", TEST_DB);
-        //We are using the database on the virtual Vagrant image, so username password are the same for all dev-databases
-        
         httpServer = startServer();
         
         //Setup RestAssured
@@ -70,9 +65,9 @@ public class RenameMeResourceTest {
         EntityManager em = emf.createEntityManager();
         try {
             em.getTransaction().begin();
-            em.createNamedQuery("RenameMe.deleteAllRows").executeUpdate();
-            em.persist(new RenameMe("Some txt","More text"));
-            em.persist(new RenameMe("aaa","bbb"));
+            em.createNamedQuery("Movie.deleteAllRows").executeUpdate();
+            em.persist(new Movie(1999, "Hello", new String[]{"hey", "girl"}));
+            em.persist(new Movie(1,"bbb", new String[]{"no", "peaky"}));
            
             em.getTransaction().commit();
         } finally {
