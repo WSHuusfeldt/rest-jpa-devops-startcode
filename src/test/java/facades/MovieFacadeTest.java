@@ -4,6 +4,11 @@ import utils.EMF_Creator;
 import entities.Movie;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.everyItem;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.hasProperty;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,10 +25,11 @@ public class MovieFacadeTest {
 
     private static EntityManagerFactory emf;
     private static MovieFacade facade;
+//    private Movie m1 = new Movie(1954, "Jesus Kristus", new String[]{"Karsten", "Pest", "Rick"});
+//    private Movie m2 = new Movie(1666, "Nå nå", new String[]{"Jesus", "Adam", "Eva"});
 
     public MovieFacadeTest() {
     }
-    
 
     //@BeforeAll
     public static void setUpClass() {
@@ -32,7 +38,7 @@ public class MovieFacadeTest {
                 "jdbc:mysql://localhost:3307/startcode_test",
                 "dev",
                 "ax2",
-                EMF_Creator.Strategy.CREATE);
+                EMF_Creator.Strategy.DROP_AND_CREATE);
         facade = MovieFacade.getFacadeExample(emf);
     }
 
@@ -44,8 +50,8 @@ public class MovieFacadeTest {
      */
     @BeforeAll
     public static void setUpClassV2() {
-       emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST,Strategy.DROP_AND_CREATE);
-       facade = MovieFacade.getFacadeExample(emf);
+        emf = EMF_Creator.createEntityManagerFactory(DbSelector.TEST, Strategy.DROP_AND_CREATE);
+        facade = MovieFacade.getFacadeExample(emf);
     }
 
     @AfterAll
@@ -62,7 +68,7 @@ public class MovieFacadeTest {
             em.getTransaction().begin();
             em.createNamedQuery("Movie.deleteAllRows").executeUpdate();
             em.persist(new Movie(1999, "Hello", new String[]{"hey", "girl"}));
-            em.persist(new Movie(1,"bbb", new String[]{"no", "peaky"}));
+            em.persist(new Movie(1, "bbb", new String[]{"sneaky", "peaky"}));
 
             em.getTransaction().commit();
         } finally {
@@ -77,8 +83,11 @@ public class MovieFacadeTest {
 
     // TODO: Delete or change this method 
     @Test
-    public void testAFacadeMethod() {
+    public void testMoviesCount() {
+        //assertThat(2, facade.getMovieCount());
         assertEquals(2, facade.getMovieCount(), "Expects two rows in the database");
     }
+    
+    
 
 }
